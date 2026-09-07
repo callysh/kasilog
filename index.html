@@ -155,6 +155,11 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:28px 0}
 #splash .dot{position:absolute;left:calc(50% + 190px);top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:#ffb46b;box-shadow:0 0 16px 4px rgba(255,180,107,.55);animation:klPulse 3s ease-in-out infinite}
 #splash .sp-eyebrow{margin:0 0 16px;font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:#7d8cb0}
 #splash .sp-word{font-family:'Space Grotesk',sans-serif;font-size:74px;line-height:1;font-weight:600;letter-spacing:-.03em;color:#fff}
+/* ── 주요일정이 없을 때: 카드를 작고 차분하게 ── */
+.card.sched-lite{align-self:start;padding:16px 20px;background:rgba(255,255,255,.028);border-color:rgba(255,255,255,.06)}
+.card.sched-lite .card-title{font-size:16px;font-weight:600;color:#8b98b6}
+.card.sched-lite .empty{padding:8px 0 0;text-align:left;font-size:14px;line-height:1.6;color:#6b7897}
+
 /* ── 사이트 내 검색창 ── */
 .site-search{position:relative;max-width:540px;margin:26px auto 0;text-align:left;z-index:40}
 .ss-box{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:13px;padding:11px 14px}
@@ -336,10 +341,10 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:28px 0}
       <span class="sec-sub" data-i18n="sec_cal_s">주요일정과 우주항공청 사업공고를 한 화면에서</span>
     </div>
     <div class="two-col">
-      <div class="card" style="padding-bottom:12px">
+      <div class="card" id="schedCard" style="padding-bottom:12px">
         <div class="feed-head"><span class="card-title"><span>🌙</span><span data-i18n="card_sched">주요일정</span></span></div>
         <ul class="plain" id="schedList"></ul>
-        <p class="empty" id="schedEmpty" hidden data-i18n="sched_empty">현재 예정된 일정이 없습니다. 새로운 일정이 생기면 표시됩니다.</p>
+        <p class="empty" id="schedEmpty" hidden data-i18n="sched_empty">현재 예정된 일정이 없습니다. 사업공고는 아래에서 확인하세요.</p>
         <div style="height:12px"></div>
       </div>
       <div class="card">
@@ -476,7 +481,7 @@ var I18N = {
     hero_lead2:"우주항공청 사업공고부터, 혁신법 기반 AI 챗봇, 연구비 편성 도우미까지.",
     ql_sched:"주요일정",ql_kasa:"사업공고",ql_chat:"KASILog 챗봇",ql_chat_s:"규정·법령 질문",ql_helper:"연구비 편성 도우미",ql_helper_s:"편성 자동 계산",ql_team:"업무분장",ql_team_s:"담당자 찾기",
     sec_cal:"KASILog 캘린더",sec_cal_s:"주요일정과 우주항공청 사업공고를 한 화면에서",
-    card_sched:"주요일정",card_feed:"우주항공청 사업공고",feed_go:"공고 게시판 ↗",sched_empty:"현재 예정된 일정이 없습니다. 새로운 일정이 생기면 표시됩니다.",
+    card_sched:"주요일정",card_feed:"우주항공청 사업공고",feed_go:"공고 게시판 ↗",sched_empty:"현재 예정된 일정이 없습니다. 사업공고는 아래에서 확인하세요.",
     sec_chat:"KASILog 챗봇",sec_chat_s:"연구과제 관련 법령·규정, 궁금한 것부터 물어보세요",chat_open:"챗봇 열기",chat_google:"Google 계정 로그인이 필요합니다.",
     chat_howto:"사용방법",chat_s1:"연구과제 관련 법령·규정 등 궁금한 내용을 질문합니다.",chat_s2:"매뉴얼·규정 원문을 살펴보며 진위를 검증합니다.",
     chat_s3a:"보완이 필요한 내용은 ",chat_s3b:"으로 제출해주세요.",
@@ -505,7 +510,7 @@ var I18N = {
     hero_lead2:"From KASA program notices to the innovation-act AI chatbot and the budget-planning helper.",
     ql_sched:"Schedule",ql_kasa:"Notices",ql_chat:"KASILog Chatbot",ql_chat_s:"Rules & regulations",ql_helper:"Budget Helper",ql_helper_s:"Automatic calculation",ql_team:"Team & Duties",ql_team_s:"Find the owner",
     sec_cal:"KASILog Calendar",sec_cal_s:"Key dates and KASA notices on one screen",
-    card_sched:"Key Schedule",card_feed:"KASA Program Notices",feed_go:"Notice board ↗",sched_empty:"No upcoming events. New items will appear here.",
+    card_sched:"Key Schedule",card_feed:"KASA Program Notices",feed_go:"Notice board ↗",sched_empty:"No upcoming events. See the program notices below.",
     sec_chat:"KASILog Chatbot",sec_chat_s:"Ask anything about R&D laws and regulations",chat_open:"Open chatbot",chat_google:"A Google account sign-in is required.",
     chat_howto:"How to use",chat_s1:"Ask about R&D-related laws, regulations, and internal rules.",chat_s2:"Verify answers against the original manuals and regulations.",
     chat_s3a:"Send anything that needs improvement to the ",chat_s3b:".",
@@ -573,6 +578,9 @@ function renderSchedule(){
     return '<li class="sched-item"><span class="dday '+cls+'">'+label+'</span><div class="sched-body"><strong title="'+esc(title)+'"><span class="sched-org">'+esc(org)+'</span>'+esc(title)+'</strong><span class="meta">'+L("fmt_date")(x.d)+'</span></div></li>';
   }).join("");
   $("#schedEmpty").hidden = items.length > 0;
+  // 일정이 없으면 카드를 축소해 빈 상자로 보이지 않게 한다
+  var schedCard = $("#schedCard");
+  if (schedCard) schedCard.classList.toggle("sched-lite", items.length === 0);
   $("#qlSchedule").textContent = items.length ? L("dyn_upcoming")(items.length) : L("dyn_sched_default");
 }
 
