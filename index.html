@@ -689,6 +689,47 @@ var CALCS = [
     ko:{ t:"연구비 편성 도우미", k:"연구비 편성 직접비 간접비 사업공고문 분석 연심 연구업무심의회 예산" },
     en:{ t:"Research Budget Helper", k:"budget planning direct indirect cost notice analysis commission review" } }
 ];
+// 검색 보강 (2026-09-07): 안내 문구의 예시 "협약변경", "정산 기한"이 0건이던 문제를 고친다.
+// 사이트 본문에 그 낱말이 없어도, 실무에서 자주 치는 말이 갈 곳을 찾게 한다.
+var SEARCH_TOPICS = [
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"협약변경 — 승인 대상인가 통보 대상인가", s:"승인·통보 구분과 신청 절차는 챗봇에 물어보세요.",
+         k:"협약변경 협약 변경 승인성 통보성 승인 통보 예산변경 과제변경 변경신청 간접비 증액 감액 연구책임자 장비 위탁" },
+    en:{ t:"Agreement change — approval or notification", s:"Ask the chatbot which changes need prior approval.",
+         k:"agreement change approval notification budget change task change" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"정산·보고 기한", s:"정산과 사용실적보고 기한은 챗봇에 물어보세요.",
+         k:"정산 위탁정산 사용실적보고 실적보고 기한 마감 제출 종료 잔액 반납" },
+    en:{ t:"Settlement and report deadlines", s:"Ask the chatbot about settlement and report deadlines.",
+         k:"settlement report deadline submission balance" } },
+  { kind:"team", target:"",
+    ko:{ t:"사업관리실 업무분장", s:"어느 담당자에게 문의할지 찾습니다.",
+         k:"업무분장 담당 담당자 누구 누가 문의 연락 배정" },
+    en:{ t:"Team assignments", s:"Find the right staff member to contact.",
+         k:"team assignment staff who contact" } },
+  { kind:"sec", target:"#schedule",
+    ko:{ t:"사업공고", s:"우주항공청 사업공고를 최근 순으로 보여줍니다.",
+         k:"사업공고 공고 공모 수요조사 접수 신규과제 우주항공청" },
+    en:{ t:"Program notices", s:"Recent KASA program notices.",
+         k:"notice announcement call for proposals" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"연구비카드·집행", s:"카드 발급과 집행 등록 절차는 챗봇에 물어보세요.",
+         k:"연구비카드 카드 발급 재사용 집행 집행등록 이지바로 EZBARO IRIS RCMS 통합이지바로" },
+    en:{ t:"Research card and execution", s:"Ask the chatbot about card issuance and execution.",
+         k:"research card execution EZBARO IRIS RCMS" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"연구보안", s:"연구보안 관련 문의는 챗봇에 물어보세요.",
+         k:"연구보안 보안 보안수당 보안서약 반출 보안점검" },
+    en:{ t:"Research security", s:"Ask the chatbot about research security.",
+         k:"research security clearance" } }
+];
+// 섹션마다 본문에 없는 검색어를 덧붙인다
+var SEC_KEYS = {
+  schedule:"주요일정 일정 캘린더 공고 사업공고",
+  chatbot:"챗봇 질문 규정 법령 혁신법 문의 상담",
+  helper:"연구비 편성 도우미 직접비 간접비 공고문 연심 연구업무심의회 예산",
+  mailbox:"우체통 건의 제안 피드백 요청"
+};
 var SEARCH_INDEX = [];
 function collapse(t){ return String(t || "").replace(/\s+/g, " ").trim(); }
 function buildSearchIndex(){
@@ -696,38 +737,45 @@ function buildSearchIndex(){
   document.querySelectorAll("section[id]").forEach(function(sec){
     var h = sec.querySelector("h2");
     if (!h) return;
-    ix.push({ tag:L("search_t_sec"), title:collapse(h.textContent), body:collapse(sec.innerText || sec.textContent), kind:"sec", target:"#"+sec.id });
+    ix.push({ tag:L("search_t_sec"), title:collapse(h.textContent), body:collapse(sec.innerText || sec.textContent), keys:(SEC_KEYS[sec.id] || ""), kind:"sec", target:"#"+sec.id });
   });
   TEAM.forEach(function(p){
     var name = en && p.nameEn ? p.nameEn : p.name;
     var duties = (en && p.dutiesEn ? p.dutiesEn : p.duties).join(" · ");
-    ix.push({ tag:L("search_t_team"), title:name, body:duties, kind:"team", target:p.name });
+    ix.push({ tag:L("search_t_team"), title:name, body:duties, keys:"담당 담당자 업무분장 문의", kind:"team", target:p.name });
   });
   document.querySelectorAll(".resource[download]").forEach(function(a){
     var s = a.querySelector("strong"), sm = a.querySelector("small");
-    ix.push({ tag:L("search_t_form"), title:collapse(s ? s.textContent : a.textContent), body:collapse(sm ? sm.textContent : ""), kind:"link", target:a.getAttribute("href") });
+    ix.push({ tag:L("search_t_form"), title:collapse(s ? s.textContent : a.textContent), body:collapse(sm ? sm.textContent : ""), keys:"양식 서식 자료 다운로드 파일", kind:"link", target:a.getAttribute("href") });
   });
   CALCS.forEach(function(c){
     var t = en ? c.en : c.ko;
-    ix.push({ tag:L("search_t_calc"), title:t.t, body:t.k, kind:"link", target:c.href });
+    ix.push({ tag:L("search_t_calc"), title:t.t, body:t.k, keys:"계산기 계산 한도", kind:"link", target:c.href });
+  });
+  SEARCH_TOPICS.forEach(function(tp){
+    var x = en ? tp.en : tp.ko;
+    ix.push({ tag:(tp.kind === "team" ? L("search_t_team") : L("search_t_sec")),
+              title:x.t, body:x.s, keys:x.k, kind:tp.kind, target:tp.target });
   });
   SEARCH_INDEX = ix;
 }
 function searchSite(q){
   q = collapse(q).toLowerCase();
   if (!q) return [];
+  // 낱말을 따로 본다. "정산 기한"처럼 붙어 있지 않은 말도 찾히게 하려는 것이다.
+  var toks = q.split(" ").filter(function(t){ return t.length > 0; });
   var hits = [];
   SEARCH_INDEX.forEach(function(it){
-    var lt = it.title.toLowerCase(), lb = it.body.toLowerCase();
-    var inT = lt.indexOf(q), inB = lb.indexOf(q);
-    if (inT === -1 && inB === -1) return;
-    var snip;
+    var lt = it.title.toLowerCase(), lb = it.body.toLowerCase(), lk = (it.keys || "").toLowerCase();
+    var all = lt + " | " + lk + " | " + lb;
+    for (var i = 0; i < toks.length; i++){ if (all.indexOf(toks[i]) === -1) return; }  // 낱말이 전부 있어야 한다
+    var f = toks[0], inT = lt.indexOf(f), inK = lk.indexOf(f), inB = lb.indexOf(f), snip;
     if (inB === -1) snip = it.body.slice(0, 74);
     else {
       var st = Math.max(0, inB - 22);
       snip = (st > 0 ? "…" : "") + it.body.slice(st, st + 76) + (st + 76 < it.body.length ? "…" : "");
     }
-    hits.push({ it:it, snip:snip, score:(inT === -1 ? 2 : (inT === 0 ? 0 : 1)) });
+    hits.push({ it:it, snip:snip, score:(inT === 0 ? 0 : (inT > 0 ? 1 : (inK !== -1 ? 2 : 3))) });
   });
   hits.sort(function(a,b){ return a.score - b.score; });
   return hits.slice(0, 8);
