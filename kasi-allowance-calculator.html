@@ -415,6 +415,12 @@
       .segmented button, .actions button, .actions a { flex: 1 1 92px; }
       .amount-row { align-items: flex-start; flex-direction: column; }
     }
+    /* ── 도움 여부 피드백 ── */
+    .kl-feedback{display:flex;align-items:center;justify-content:center;gap:10px;margin:22px auto 30px;font-size:.92rem;color:#5c6580}
+    .kl-feedback button{cursor:pointer;font:inherit;font-size:1.05rem;line-height:1;background:#fff;border:1px solid rgba(20,28,60,.14);border-radius:10px;padding:8px 13px}
+    .kl-feedback button:hover{border-color:rgba(20,28,60,.32)}
+    .kl-toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:900;background:#0b1020;color:#fff;font-size:.9rem;font-weight:700;padding:11px 18px;border-radius:11px;box-shadow:0 16px 36px rgba(10,16,40,.35);opacity:0;pointer-events:none;transition:opacity .25s}
+    .kl-toast.show{opacity:1}
   </style>
 </head>
 <body>
@@ -622,6 +628,13 @@
       </aside>
     </section>
   </main>
+
+  <!-- 도움 여부 피드백: 집계는 방문자 브라우저(localStorage)에만 남는다 -->
+  <div class="kl-feedback" id="klFeedback">
+    <span data-en="Was this helpful?">도움이 됐나요?</span>
+    <button type="button" id="klFbUp" aria-label="도움이 됐습니다">👍</button>
+    <button type="button" id="klFbDown" aria-label="개선이 필요합니다">👎</button>
+  </div>
 
   <script>
     /* ═══════════════════════════════════════════════════════════
@@ -1198,5 +1211,31 @@
     updateUnitLabels();
     calculate();
   </script>
+
+  <!-- 도움 여부 피드백 동작 (외부 전송 없음) -->
+  <script>
+    (function(){
+      var MAILBOX = "https://buttered-lilac-e93.notion.site/2b6510ff28e88071a6fecf80ace34862?pvs=105";
+      function key(k){ return "kasilog-fb-" + k + ":" + (location.pathname.split("/").pop() || "index.html"); }
+      function bump(k){
+        try { localStorage.setItem(key(k), String(Number(localStorage.getItem(key(k)) || 0) + 1)); } catch (e) { /* 무시 */ }
+      }
+      function toast(msg){
+        var t = document.querySelector(".kl-toast");
+        if (!t){ t = document.createElement("div"); t.className = "kl-toast"; t.setAttribute("role", "status"); document.body.appendChild(t); }
+        t.textContent = msg; t.classList.add("show");
+        clearTimeout(window.__klToastTid);
+        window.__klToastTid = setTimeout(function(){ t.classList.remove("show"); }, 2200);
+      }
+      var up = document.getElementById("klFbUp"), down = document.getElementById("klFbDown");
+      if (up) up.addEventListener("click", function(){
+        bump("up");
+        toast(window.uiLang === "en" ? "Thanks for the feedback" : "의견 감사합니다 ✨");
+      });
+      if (down) down.addEventListener("click", function(){ bump("down"); window.open(MAILBOX, "_blank", "noopener"); });
+    })();
+  </script>
+<!-- 사용 통계: Cloudflare Web Analytics (쿠키 없음). CF_ANALYTICS_TOKEN_HERE 를 Cloudflare 대시보드에서 발급한 실제 토큰으로 바꿔주세요. -->
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "CF_ANALYTICS_TOKEN_HERE"}'></script>
 </body>
 </html>

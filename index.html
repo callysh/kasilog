@@ -155,6 +155,12 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:28px 0}
 #splash .dot{position:absolute;left:calc(50% + 190px);top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:#ffb46b;box-shadow:0 0 16px 4px rgba(255,180,107,.55);animation:klPulse 3s ease-in-out infinite}
 #splash .sp-eyebrow{margin:0 0 16px;font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:#7d8cb0}
 #splash .sp-word{font-family:'Space Grotesk',sans-serif;font-size:74px;line-height:1;font-weight:600;letter-spacing:-.03em;color:#fff}
+/* ── 도움 여부 피드백 ── */
+.fb-wrap{padding:0 0 26px}
+.feedback{display:flex;align-items:center;justify-content:center;gap:10px;font-size:15px;color:#8b98b6}
+.fb-btn{cursor:pointer;font-family:inherit;font-size:18px;line-height:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:8px 13px;color:#e9edf8}
+.fb-btn:hover{background:rgba(91,140,255,.18);border-color:rgba(91,140,255,.4)}
+
 /* ── 주요일정이 없을 때: 카드를 작고 차분하게 ── */
 .card.sched-lite{align-self:start;padding:16px 20px;background:rgba(255,255,255,.028);border-color:rgba(255,255,255,.06)}
 .card.sched-lite .card-title{font-size:16px;font-weight:600;color:#8b98b6}
@@ -426,6 +432,15 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:28px 0}
   </div>
 </section>
 
+<!-- 도움 여부 피드백: 집계는 방문자 브라우저(localStorage)에만 남는다 -->
+<div class="shell fb-wrap">
+  <div class="feedback" id="feedback">
+    <span data-i18n="fb_q">도움이 됐나요?</span>
+    <button type="button" class="fb-btn" id="fbUp" aria-label="도움이 됐습니다">👍</button>
+    <button type="button" class="fb-btn" id="fbDown" aria-label="개선이 필요합니다">👎</button>
+  </div>
+</div>
+
 <footer>
   <div class="shell footer-inner">
     <span class="f-logo"><img src="data:image/png;base64,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" alt="KASILog"></span>
@@ -497,6 +512,7 @@ var I18N = {
     dyn_loading:"최신 공고를 불러오는 중…",dyn_fail:"실시간 목록을 불러오지 못했습니다. 공고 게시판 버튼으로 확인해주세요.",
     dyn_updated:"업데이트",dyn_posted:"게시일",dyn_src:"우주항공청",dyn_board:"게시판 바로가기",
     dyn_upcoming:function(n){return "다가오는 일정 "+n+"건"},dyn_sched_default:"일정 확인",dyn_new:function(n){return "신규 공고 "+n+"건"},dyn_recent:function(n){return "최근 "+n+"건 표시 중"},
+    fb_q:"도움이 됐나요?",fb_thanks:"의견 감사합니다 ✨",
     search_ph:"무엇을 찾으세요? 예: 연구수당, 협약변경, 정산 기한",
     search_t_sec:"사이트",search_t_team:"담당자",search_t_form:"자료",search_t_calc:"계산기",
     search_empty:"검색 결과가 없습니다",search_empty_s:"KASILog 챗봇에 물어보세요",
@@ -526,6 +542,7 @@ var I18N = {
     dyn_loading:"Loading the latest notices…",dyn_fail:"Could not load the live list. Please use the notice-board button.",
     dyn_updated:"Updated",dyn_posted:"Posted",dyn_src:"KASA",dyn_board:"Go to board",
     dyn_upcoming:function(n){return n+" upcoming"},dyn_sched_default:"View schedule",dyn_new:function(n){return n+" new notices"},dyn_recent:function(n){return "showing latest "+n},
+    fb_q:"Was this helpful?",fb_thanks:"Thanks for the feedback ✨",
     search_ph:"What are you looking for? e.g. allowance, agreement change, settlement",
     search_t_sec:"Section",search_t_team:"Staff",search_t_form:"File",search_t_calc:"Calculator",
     search_empty:"No results",search_empty_s:"Try the KASILog chatbot",
@@ -798,6 +815,18 @@ $("#teamSearch").addEventListener("input", function(e){ renderTeam(e.target.valu
 document.querySelectorAll(".lang-btn").forEach(function(b){ b.addEventListener("click", function(){ applyLang(b.dataset.lang); }); });
 
 
+/* ── 도움 여부 피드백 (수치는 이 브라우저에만 저장, 외부 전송 없음) ── */
+function fbKey(k){ return "kasilog-fb-" + k + ":" + (location.pathname.split("/").pop() || "index.html"); }
+function fbBump(k){
+  try { localStorage.setItem(fbKey(k), String(Number(localStorage.getItem(fbKey(k)) || 0) + 1)); } catch(e){}
+}
+$("#fbUp").addEventListener("click", function(){ fbBump("up"); showToast(L("fb_thanks")); });
+$("#fbDown").addEventListener("click", function(){
+  fbBump("down");
+  var mb = document.querySelector(".mail-card .btn-white");
+  if (mb) window.open(mb.getAttribute("href"), "_blank", "noopener");
+});
+
 /* ── 검색창 이벤트 ── */
 $("#ssInput").addEventListener("input", function(){
   var v = this.value;
@@ -847,5 +876,7 @@ try { savedLang = localStorage.getItem("kasilog-lang") || "ko"; } catch(e){}
 applyLang(savedLang === "en" ? "en" : "ko");
 loadFeed();
 </script>
+<!-- 사용 통계: Cloudflare Web Analytics (쿠키 없음). CF_ANALYTICS_TOKEN_HERE 를 Cloudflare 대시보드에서 발급한 실제 토큰으로 바꿔주세요. -->
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "CF_ANALYTICS_TOKEN_HERE"}'></script>
 </body>
 </html>
