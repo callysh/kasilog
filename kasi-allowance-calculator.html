@@ -405,6 +405,10 @@
       .result-pane { position: static; }
     }
     @media (max-width: 680px) {
+      /* 연차 입력표(7열)는 가로 스크롤로 본다 — 좁은 화면에서 금액이 잘리지 않게 */
+      .year-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .year-table { min-width: 528px; }
+      .year-table col.ycol-year { width: 66px; }
       .shell { padding: 16px 18px 28px; }
       .top { padding: 26px 20px 24px; }
       .top::after { display: none; }
