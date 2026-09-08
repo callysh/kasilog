@@ -1235,6 +1235,10 @@
         clearTimeout(window.__klToastTid);
         window.__klToastTid = setTimeout(function(){ t.classList.remove("show"); }, 2200);
       }
+      /* 기능별 누적 집계 (화면 표시 없음, 유승님 지정 2026-09-08).
+         index.html 의 링크 클릭과 별도로, 이 페이지가 실제로 열렸는지를 센다
+         (주소를 직접 열거나 즐겨찾기로 들어오는 경우까지 잡기 위함). */
+      try { new Image().src = "https://abacus.jasoncameron.dev/hit/kasilog-kasi-pmo/f-calc-allowance-open"; } catch(e){}
       var up = document.getElementById("klFbUp"), down = document.getElementById("klFbDown");
       // 좋다는 의견도 받는다 (유승님 지정 2026-09-08). 양쪽 모두 우체통을 연다.
       if (up) up.addEventListener("click", function(){

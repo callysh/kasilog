@@ -968,9 +968,50 @@ function fbOpenMailbox(){
 $("#fbUp").addEventListener("click", function(){ fbBump("up"); showToast(L("fb_thanks")); fbOpenMailbox(); });
 $("#fbDown").addEventListener("click", function(){ fbBump("down"); fbOpenMailbox(); });
 
+
+/* ── 기능별 누적 집계 (유승님 지정 2026-09-08) ─────────────────────────
+   화면에는 아무것도 표시하지 않는다. 방문 카운터와 같은 abacus 서비스에
+   "무엇을 몇 번 썼는지"만 누적한다. Cloudflare 통계는 보관 기간이 있어
+   결과보고용 장기 누적은 이쪽에 남긴다.
+   보내는 것: 기능 이름 하나. 보내지 않는 것: 검색어, 과제명, 개인정보, 방문자 식별값.
+   숫자 확인: https://abacus.jasoncameron.dev/get/kasilog-kasi-pmo/<기능이름>
+   ───────────────────────────────────────────────────────────────── */
+var TALLY_NS = "kasilog-kasi-pmo";
+var tallyDone = {};
+function tally(key){
+  if (tallyDone[key]) return;               // 한 번 열린 화면에서 같은 기능은 한 번만 센다
+  tallyDone[key] = 1;
+  try { new Image().src = "https://abacus.jasoncameron.dev/hit/" + TALLY_NS + "/" + key; } catch(e){}
+}
+// 클릭은 한 곳에서 받는다. 링크를 눌러 페이지를 떠나도 Image 요청은 발송된다.
+document.addEventListener("click", function(e){
+  var t = e.target;
+  if (!t || !t.closest) return;
+  var map = [
+    ["a[data-i18n='chat_open'], a[href*='notebook.google.com']", "f-chatbot"],
+    [".mail-card .btn-white",                                    "f-mailbox"],
+    ["a[href*='kasi-budget-helper']",                            "f-calc-budget"],
+    ["a[href*='kasi-allowance-calculator']",                     "f-calc-allowance"],
+    ["a.resource[href$='.pdf']",                                 "f-form-pdf"],
+    ["a.resource[href$='.xlsx']",                                "f-form-xlsx"],
+    ["a[data-i18n='feed_go']",                                   "f-kasa-board"],
+    [".feed-item a",                                             "f-kasa-notice"],
+    ["#teamBtn, #qlTeam",                                        "f-team"],
+    ["#fbUp",                                                    "f-fb-up"],
+    ["#fbDown",                                                  "f-fb-down"],
+    [".ss-row",                                                  "f-search-pick"]
+  ];
+  for (var i = 0; i < map.length; i++){
+    var hit = null;
+    try { hit = t.closest(map[i][0]); } catch(err){}
+    if (hit){ tally(map[i][1]); break; }
+  }
+}, true);
+
 /* ── 검색창 이벤트 ── */
 $("#ssInput").addEventListener("input", function(){
   var v = this.value;
+  if (collapse(v).length >= 2) tally("f-search");   // 검색을 썼다는 사실만. 검색어는 보내지 않는다
   clearTimeout(ssTid);
   ssTid = setTimeout(function(){
     if (!collapse(v)){ ssClose(); return; }
