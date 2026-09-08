@@ -420,7 +420,9 @@
       .amount-row { align-items: flex-start; flex-direction: column; }
     }
     /* ── 도움 여부 피드백 ── */
-    .kl-feedback{display:flex;align-items:center;justify-content:center;gap:10px;margin:22px auto 30px;font-size:.92rem;color:#5c6580}
+    .kl-feedback{display:flex;flex-direction:column;align-items:center;gap:11px;margin:22px auto 30px;text-align:center}
+    .kl-feedback .kl-fb-q{margin:0;max-width:460px;font-size:.92rem;line-height:1.6;color:#5c6580}
+    .kl-fb-btns{display:flex;gap:10px}
     .kl-feedback button{cursor:pointer;font:inherit;font-size:1.05rem;line-height:1;background:#fff;border:1px solid rgba(20,28,60,.14);border-radius:10px;padding:8px 13px}
     .kl-feedback button:hover{border-color:rgba(20,28,60,.32)}
     .kl-toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:900;background:#0b1020;color:#fff;font-size:.9rem;font-weight:700;padding:11px 18px;border-radius:11px;box-shadow:0 16px 36px rgba(10,16,40,.35);opacity:0;pointer-events:none;transition:opacity .25s}
@@ -635,9 +637,11 @@
 
   <!-- 도움 여부 피드백: 집계는 방문자 브라우저(localStorage)에만 남는다 -->
   <div class="kl-feedback" id="klFeedback">
-    <span data-en="Was this helpful?">도움이 됐나요?</span>
-    <button type="button" id="klFbUp" aria-label="도움이 됐습니다">👍</button>
-    <button type="button" id="klFbDown" aria-label="개선이 필요합니다">👎</button>
+    <p class="kl-fb-q" data-en="Has KASILog been helpful? Tell us and we will act on it.">KASILog가 도움이 되셨나요? 의견을 주시면 적극 반영하겠습니다.</p>
+    <div class="kl-fb-btns">
+      <button type="button" id="klFbUp" aria-label="도움이 되었다는 의견 보내기">👍</button>
+      <button type="button" id="klFbDown" aria-label="개선 의견 보내기">👎</button>
+    </div>
   </div>
 
   <script>
@@ -1232,9 +1236,11 @@
         window.__klToastTid = setTimeout(function(){ t.classList.remove("show"); }, 2200);
       }
       var up = document.getElementById("klFbUp"), down = document.getElementById("klFbDown");
+      // 좋다는 의견도 받는다 (유승님 지정 2026-09-08). 양쪽 모두 우체통을 연다.
       if (up) up.addEventListener("click", function(){
         bump("up");
         toast(window.uiLang === "en" ? "Thanks for the feedback" : "의견 감사합니다 ✨");
+        window.open(MAILBOX, "_blank", "noopener");
       });
       if (down) down.addEventListener("click", function(){ bump("down"); window.open(MAILBOX, "_blank", "noopener"); });
     })();

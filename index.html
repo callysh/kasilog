@@ -157,14 +157,17 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:28px 0}
 #splash .sp-word{font-family:'Space Grotesk',sans-serif;font-size:74px;line-height:1;font-weight:600;letter-spacing:-.03em;color:#fff}
 /* ── 도움 여부 피드백 ── */
 .fb-wrap{padding:0 0 26px}
-.feedback{display:flex;align-items:center;justify-content:center;gap:10px;font-size:15px;color:#8b98b6}
+.feedback{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.fb-q{margin:0;max-width:520px;font-size:15px;line-height:1.6;color:#8b98b6;text-wrap:pretty}
+.fb-btns{display:flex;gap:10px}
 .fb-btn{cursor:pointer;font-family:inherit;font-size:18px;line-height:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:8px 13px;color:#e9edf8}
 .fb-btn:hover{background:rgba(91,140,255,.18);border-color:rgba(91,140,255,.4)}
 
 /* ── 주요일정이 없을 때: 카드를 작고 차분하게 ── */
 .card.sched-lite{align-self:start;padding:16px 20px;background:rgba(255,255,255,.028);border-color:rgba(255,255,255,.06)}
 .card.sched-lite .card-title{font-size:16px;font-weight:600;color:#8b98b6}
-.card.sched-lite .empty{padding:8px 0 0;text-align:left;font-size:14px;line-height:1.6;color:#6b7897}
+/* 빈 상태 문구는 사업공고 목록 항목(.feed-body strong)과 같은 글씨체·크기로 맞춘다 (유승님 지정 2026-09-08) */
+.card.sched-lite .empty{padding:8px 0 0;text-align:left;font-size:15.8px;font-weight:600;line-height:1.5;color:#8b98b6}
 
 /* ── 사이트 내 검색창 ── */
 .site-search{position:relative;max-width:540px;margin:26px auto 0;text-align:left;z-index:40}
@@ -253,7 +256,7 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:28px 0}
   .dday{min-width:50px;font-size:12.5px;padding:4px 6px}
   .sched-body strong{font-size:15px}
   .feed-item a{padding:13px 4px 13px 0}
-  .feed-body strong{font-size:15px}
+  .feed-body strong,.card.sched-lite .empty{font-size:15px}
   .mini-label{font-size:15.5px;margin-bottom:14px}
   .steps p{font-size:15px}
   .chips button{font-size:14.5px;padding:12px 13px}
@@ -350,7 +353,7 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:28px 0}
       <div class="card" id="schedCard" style="padding-bottom:12px">
         <div class="feed-head"><span class="card-title"><span>🌙</span><span data-i18n="card_sched">주요일정</span></span></div>
         <ul class="plain" id="schedList"></ul>
-        <p class="empty" id="schedEmpty" hidden data-i18n="sched_empty">현재 예정된 일정이 없습니다. 사업공고는 아래에서 확인하세요.</p>
+        <p class="empty" id="schedEmpty" hidden data-i18n="sched_empty">현재 예정된 일정이 없습니다.</p>
         <div style="height:12px"></div>
       </div>
       <div class="card">
@@ -435,9 +438,11 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:28px 0}
 <!-- 도움 여부 피드백: 집계는 방문자 브라우저(localStorage)에만 남는다 -->
 <div class="shell fb-wrap">
   <div class="feedback" id="feedback">
-    <span data-i18n="fb_q">도움이 됐나요?</span>
-    <button type="button" class="fb-btn" id="fbUp" aria-label="도움이 됐습니다">👍</button>
-    <button type="button" class="fb-btn" id="fbDown" aria-label="개선이 필요합니다">👎</button>
+    <p class="fb-q" data-i18n="fb_q">KASILog가 도움이 되셨나요? 의견을 주시면 적극 반영하겠습니다.</p>
+    <div class="fb-btns">
+      <button type="button" class="fb-btn" id="fbUp" aria-label="도움이 되었다는 의견 보내기">👍</button>
+      <button type="button" class="fb-btn" id="fbDown" aria-label="개선 의견 보내기">👎</button>
+    </div>
   </div>
 </div>
 
@@ -496,7 +501,7 @@ var I18N = {
     hero_lead2:"우주항공청 사업공고부터, 혁신법 기반 AI 챗봇, 연구비 편성 도우미까지.",
     ql_sched:"주요일정",ql_kasa:"사업공고",ql_chat:"KASILog 챗봇",ql_chat_s:"규정·법령 질문",ql_helper:"연구비 편성 도우미",ql_helper_s:"편성 자동 계산",ql_team:"업무분장",ql_team_s:"담당자 찾기",
     sec_cal:"KASILog 캘린더",sec_cal_s:"주요일정과 우주항공청 사업공고를 한 화면에서",
-    card_sched:"주요일정",card_feed:"우주항공청 사업공고",feed_go:"공고 게시판 ↗",sched_empty:"현재 예정된 일정이 없습니다. 사업공고는 아래에서 확인하세요.",
+    card_sched:"주요일정",card_feed:"우주항공청 사업공고",feed_go:"공고 게시판 ↗",sched_empty:"현재 예정된 일정이 없습니다.",
     sec_chat:"KASILog 챗봇",sec_chat_s:"연구과제 관련 법령·규정, 궁금한 것부터 물어보세요",chat_open:"챗봇 열기",chat_google:"Google 계정 로그인이 필요합니다.",
     chat_howto:"사용방법",chat_s1:"연구과제 관련 법령·규정 등 궁금한 내용을 질문합니다.",chat_s2:"매뉴얼·규정 원문을 살펴보며 진위를 검증합니다.",
     chat_s3a:"보완이 필요한 내용은 ",chat_s3b:"으로 제출해주세요.",
@@ -512,7 +517,7 @@ var I18N = {
     dyn_loading:"최신 공고를 불러오는 중…",dyn_fail:"실시간 목록을 불러오지 못했습니다. 공고 게시판 버튼으로 확인해주세요.",
     dyn_updated:"업데이트",dyn_posted:"게시일",dyn_src:"우주항공청",dyn_board:"게시판 바로가기",
     dyn_upcoming:function(n){return "다가오는 일정 "+n+"건"},dyn_sched_default:"일정 확인",dyn_new:function(n){return "신규 공고 "+n+"건"},dyn_recent:function(n){return "최근 "+n+"건 표시 중"},
-    fb_q:"도움이 됐나요?",fb_thanks:"의견 감사합니다 ✨",
+    fb_q:"KASILog가 도움이 되셨나요? 의견을 주시면 적극 반영하겠습니다.",fb_thanks:"의견 감사합니다 ✨",
     search_ph:"무엇을 찾으세요? 예: 연구수당, 협약변경, 정산 기한",
     search_t_sec:"사이트",search_t_team:"담당자",search_t_form:"자료",search_t_calc:"계산기",
     search_empty:"검색 결과가 없습니다",search_empty_s:"KASILog 챗봇에 물어보세요",
@@ -526,7 +531,7 @@ var I18N = {
     hero_lead2:"From KASA program notices to the innovation-act AI chatbot and the budget-planning helper.",
     ql_sched:"Schedule",ql_kasa:"Notices",ql_chat:"KASILog Chatbot",ql_chat_s:"Rules & regulations",ql_helper:"Budget Helper",ql_helper_s:"Automatic calculation",ql_team:"Team & Duties",ql_team_s:"Find the owner",
     sec_cal:"KASILog Calendar",sec_cal_s:"Key dates and KASA notices on one screen",
-    card_sched:"Key Schedule",card_feed:"KASA Program Notices",feed_go:"Notice board ↗",sched_empty:"No upcoming events. See the program notices below.",
+    card_sched:"Key Schedule",card_feed:"KASA Program Notices",feed_go:"Notice board ↗",sched_empty:"No upcoming events.",
     sec_chat:"KASILog Chatbot",sec_chat_s:"Ask anything about R&D laws and regulations",chat_open:"Open chatbot",chat_google:"A Google account sign-in is required.",
     chat_howto:"How to use",chat_s1:"Ask about R&D-related laws, regulations, and internal rules.",chat_s2:"Verify answers against the original manuals and regulations.",
     chat_s3a:"Send anything that needs improvement to the ",chat_s3b:".",
@@ -542,7 +547,7 @@ var I18N = {
     dyn_loading:"Loading the latest notices…",dyn_fail:"Could not load the live list. Please use the notice-board button.",
     dyn_updated:"Updated",dyn_posted:"Posted",dyn_src:"KASA",dyn_board:"Go to board",
     dyn_upcoming:function(n){return n+" upcoming"},dyn_sched_default:"View schedule",dyn_new:function(n){return n+" new notices"},dyn_recent:function(n){return "showing latest "+n},
-    fb_q:"Was this helpful?",fb_thanks:"Thanks for the feedback ✨",
+    fb_q:"Has KASILog been helpful? Tell us and we will act on it.",fb_thanks:"Thanks for the feedback ✨",
     search_ph:"What are you looking for? e.g. allowance, agreement change, settlement",
     search_t_sec:"Section",search_t_team:"Staff",search_t_form:"File",search_t_calc:"Calculator",
     search_empty:"No results",search_empty_s:"Try the KASILog chatbot",
@@ -719,15 +724,70 @@ var SEARCH_TOPICS = [
          k:"research card execution EZBARO IRIS RCMS" } },
   { kind:"sec", target:"#chatbot",
     ko:{ t:"연구보안", s:"연구보안 관련 문의는 챗봇에 물어보세요.",
-         k:"연구보안 보안 보안수당 보안서약 반출 보안점검" },
+         k:"연구보안 보안 보안수당 보안서약 반출 보안점검 겸직 외국인" },
     en:{ t:"Research security", s:"Ask the chatbot about research security.",
-         k:"research security clearance" } }
+         k:"research security clearance" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"신규과제 신청·협약체결", s:"신청부터 협약까지 절차를 챗봇에 물어보세요.",
+         k:"신규 신규과제 신청 제안서 연구계획서 연차실적계획서 협약 협약체결 선정 공모 접수 심의 연심 연구업무심의회 원장승인 결재선" },
+    en:{ t:"New task application and agreement", s:"Ask the chatbot about the application-to-agreement steps.",
+         k:"new task application proposal plan agreement screening" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"인건비·연구수당·보안수당", s:"인건비와 수당 기준은 챗봇에 물어보세요. 한도 계산은 계산기를 쓰세요.",
+         k:"인건비 내부인건비 학생인건비 참여율 연구수당 보안수당 수당 지급신청 평가신청 수정인건비 계상" },
+    en:{ t:"Labor cost and allowances", s:"Ask the chatbot about labor cost and allowance rules.",
+         k:"labor cost student allowance participation rate" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"집행률·잔액·예실대비표", s:"집행 현황과 잔액 확인 방법은 챗봇에 물어보세요.",
+         k:"집행률 집행 잔액 흡수 예실대비표 예실 대비표 이월 반납 불인정 증빙 영수증" },
+    en:{ t:"Execution rate and balance", s:"Ask the chatbot how to check execution and balance.",
+         k:"execution rate balance carryover evidence" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"국제·민간 수탁 (환율·인보이스)", s:"국제수탁 관련 문의는 챗봇에 물어보세요.",
+         k:"국제 국제수탁 민간 민간수탁 환율 환차익 인보이스 invoice 외화 송금 GMT 제미니 해외" },
+    en:{ t:"International and private contracts", s:"Ask the chatbot about international contract work.",
+         k:"international private contract exchange rate invoice" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"장비·시설 구입", s:"연구시설·장비 구입과 심의는 챗봇에 물어보세요.",
+         k:"장비 연구장비 시설 구입 도입 장비심의 심의 리스 임차 자산" },
+    en:{ t:"Equipment and facilities", s:"Ask the chatbot about equipment purchases.",
+         k:"equipment facility purchase screening" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"부가세·세금", s:"부가세 산입과 세금 처리는 챗봇에 물어보세요.",
+         k:"부가세 부가가치세 세금 산입 확정 예정 원천징수 세액" },
+    en:{ t:"VAT and taxes", s:"Ask the chatbot about VAT handling.",
+         k:"VAT tax withholding" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"수입의뢰·선수금", s:"수입의뢰와 선수금 처리는 챗봇에 물어보세요.",
+         k:"수입의뢰 수입 의뢰 선수금 대체 입금 청구 연구비청구 교부" },
+    en:{ t:"Revenue request and advance payment", s:"Ask the chatbot about revenue and advance handling.",
+         k:"revenue request advance payment claim" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"연구노트·연구윤리", s:"연구노트와 연구윤리 문의는 챗봇에 물어보세요.",
+         k:"연구노트 노트 연구윤리 윤리 IRB 생명윤리 부정행위" },
+    en:{ t:"Research notes and ethics", s:"Ask the chatbot about research notes and ethics.",
+         k:"research note ethics IRB" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"위탁·전문가활용", s:"위탁연구와 전문가활용비는 챗봇에 물어보세요.",
+         k:"위탁 위탁연구 위탁기관 전문가활용 외부전문기술활용 용역 자문료" },
+    en:{ t:"Subcontracts and expert fees", s:"Ask the chatbot about subcontracts and expert fees.",
+         k:"subcontract expert fee consulting" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"성과관리·기술이전", s:"성과와 기술이전 문의는 챗봇에 물어보세요.",
+         k:"성과 성과관리 기술이전 직무발명 특허 논문 실적" },
+    en:{ t:"Outcomes and tech transfer", s:"Ask the chatbot about outcomes and tech transfer.",
+         k:"outcome tech transfer patent invention" } },
+  { kind:"sec", target:"#mailbox",
+    ko:{ t:"건의·문의 보내기 (우체통)", s:"고쳤으면 하는 것, 물어볼 것을 남겨주세요.",
+         k:"우체통 건의 문의 제안 요청 피드백 의견 오류 신고 개선" },
+    en:{ t:"Send feedback (mailbox)", s:"Leave a request or a question.",
+         k:"mailbox feedback request suggestion report" } }
 ];
 // 섹션마다 본문에 없는 검색어를 덧붙인다
 var SEC_KEYS = {
   schedule:"주요일정 일정 캘린더 공고 사업공고",
-  chatbot:"챗봇 질문 규정 법령 혁신법 문의 상담",
-  helper:"연구비 편성 도우미 직접비 간접비 공고문 연심 연구업무심의회 예산",
+  chatbot:"챗봇 질문 규정 법령 혁신법 국가연구개발혁신법 관리규정 요령 편람 문의 상담 IRIS EZBARO 이지바로 RCMS PMS MIS 시스템",
+  helper:"연구비 편성 도우미 직접비 간접비 공고문 연심 연구업무심의회 예산 계상 계상기준 배분 총괄표",
   mailbox:"우체통 건의 제안 피드백 요청"
 };
 var SEARCH_INDEX = [];
@@ -868,12 +928,13 @@ function fbKey(k){ return "kasilog-fb-" + k + ":" + (location.pathname.split("/"
 function fbBump(k){
   try { localStorage.setItem(fbKey(k), String(Number(localStorage.getItem(fbKey(k)) || 0) + 1)); } catch(e){}
 }
-$("#fbUp").addEventListener("click", function(){ fbBump("up"); showToast(L("fb_thanks")); });
-$("#fbDown").addEventListener("click", function(){
-  fbBump("down");
+// 좋다는 의견도 받는다 (유승님 지정 2026-09-08). 양쪽 모두 우체통을 연다.
+function fbOpenMailbox(){
   var mb = document.querySelector(".mail-card .btn-white");
   if (mb) window.open(mb.getAttribute("href"), "_blank", "noopener");
-});
+}
+$("#fbUp").addEventListener("click", function(){ fbBump("up"); showToast(L("fb_thanks")); fbOpenMailbox(); });
+$("#fbDown").addEventListener("click", function(){ fbBump("down"); fbOpenMailbox(); });
 
 /* ── 검색창 이벤트 ── */
 $("#ssInput").addEventListener("input", function(){
