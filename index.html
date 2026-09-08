@@ -155,6 +155,151 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:28px 0}
 #splash .dot{position:absolute;left:calc(50% + 190px);top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:#ffb46b;box-shadow:0 0 16px 4px rgba(255,180,107,.55);animation:klPulse 3s ease-in-out infinite}
 #splash .sp-eyebrow{margin:0 0 16px;font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:#7d8cb0}
 #splash .sp-word{font-family:'Space Grotesk',sans-serif;font-size:74px;line-height:1;font-weight:600;letter-spacing:-.03em;color:#fff}
+/* ── 도움 여부 피드백 ── */
+/* 위쪽 배경 경계와 문구가 맞닿아 어색했다 → 위 여백을 준다 (유승님 지적 2026-09-08).
+   좁은 화면용 미디어쿼리의 .shell{padding} 이 뒤에서 덮어쓰므로 클래스 두 개로 우선순위를 올린다.
+   좌우 여백은 .shell 것을 그대로 쓴다. */
+.shell.fb-wrap{padding-top:34px;padding-bottom:26px}
+.feedback{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.fb-q{margin:0;max-width:520px;font-size:15px;line-height:1.6;color:#8b98b6;text-wrap:pretty}
+.fb-btns{display:flex;gap:10px}
+.fb-btn{cursor:pointer;font-family:inherit;font-size:18px;line-height:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:8px 13px;color:#e9edf8}
+.fb-btn:hover{background:rgba(91,140,255,.18);border-color:rgba(91,140,255,.4)}
+
+/* ── 주요일정이 없을 때: 카드를 작고 차분하게 ── */
+.card.sched-lite{align-self:start;padding:16px 20px;background:rgba(255,255,255,.028);border-color:rgba(255,255,255,.06)}
+.card.sched-lite .card-title{font-size:16px;font-weight:600;color:#8b98b6}
+/* 빈 상태 문구는 사업공고 목록 항목(.feed-body strong)과 같은 글씨체·크기로 맞춘다 (유승님 지정 2026-09-08) */
+.card.sched-lite .empty{padding:8px 0 0;text-align:left;font-size:15.8px;font-weight:600;line-height:1.5;color:#8b98b6}
+
+/* ── 사이트 내 검색창 ── */
+.site-search{position:relative;max-width:540px;margin:26px auto 0;text-align:left;z-index:40}
+.ss-box{position:relative;display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.2);border-radius:14px;padding:10px 13px}
+/* 금색 테두리가 천천히 한 바퀴 흐른다. 쨍한 금색이 아니라 샴페인색이다 (유승님 지정 2026-09-08).
+   테두리만 칠하려고 mask 두 장을 겹쳐 안쪽을 파낸다. */
+.ss-box::before{
+  content:"";position:absolute;inset:-2px;border-radius:16px;padding:2px;pointer-events:none;
+  background:linear-gradient(100deg,
+    rgba(198,166,100,0) 18%, rgba(206,178,116,.5) 32%, rgba(226,203,150,.9) 43%,
+    rgba(246,232,196,1) 50%, rgba(226,203,150,.9) 57%, rgba(206,178,116,.5) 68%,
+    rgba(198,166,100,0) 82%);
+  background-size:260% 100%;background-repeat:no-repeat;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  /* 번짐은 띠 모양을 그대로 따라가는 얇은 그림자로 낸다. 별도 blur 층은 너무 커서 뺐다 (2026-09-08) */
+  filter:drop-shadow(0 0 4px rgba(232,208,152,.5));
+  animation:ssGold 7s linear infinite;
+}
+
+@keyframes ssGold{ from{background-position:210% 0} to{background-position:-60% 0} }
+.ss-box:focus-within{border-color:rgba(255,255,255,.34);background:rgba(255,255,255,.09)}
+.ss-box:focus-within::before{animation-duration:3.4s;filter:drop-shadow(0 0 6px rgba(238,216,166,.62))}
+/* 움직임을 줄이도록 설정한 사람에게는 흐르지 않고 금색 테두리만 남긴다 */
+@media (prefers-reduced-motion: reduce){
+  .ss-box::before{animation:none;background-position:50% 0;filter:none}
+}
+.ss-ic{flex:none;font-size:15px;opacity:.75}
+#ssInput{flex:1;min-width:0;background:transparent;border:0;outline:none;color:#e9edf8;font-size:15.5px}
+.ss-drop{position:absolute;left:0;right:0;top:calc(100% + 8px);background:#0b1020;border:1px solid rgba(255,255,255,.13);border-radius:15px;box-shadow:0 26px 60px rgba(0,0,0,.6);max-height:62vh;overflow-y:auto;overflow-x:hidden}
+.ss-row{display:flex;gap:11px;align-items:flex-start;width:100%;text-align:left;cursor:pointer;font-family:inherit;background:transparent;border:0;border-top:1px solid rgba(255,255,255,.06);padding:11px 14px;color:#e9edf8}
+.ss-row:first-child{border-top:0}
+.ss-row.on,.ss-row:hover{background:rgba(91,140,255,.16)}
+.ss-tag{flex:none;margin-top:2px;font-size:11.5px;font-weight:700;color:#a8c3ff;background:rgba(91,140,255,.16);border:1px solid rgba(91,140,255,.3);border-radius:6px;padding:3px 7px}
+.ss-txt{min-width:0;flex:1}
+.ss-txt strong{display:block;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ss-txt span{display:block;margin-top:2px;font-size:13px;color:#8b98b6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ── 모바일 반응형 (태블릿 820px / 휴대폰 520px) ── */
+@media (max-width:820px){
+  .shell{padding:0 20px}
+  .nav-inner{height:60px;gap:12px}
+  .nav-links{gap:2px;font-size:14px}
+  .nav-links>a{padding:7px 8px}
+  .team-btn{margin-left:6px;font-size:13.5px;padding:7px 12px}
+  .team-pop{top:54px;right:20px;width:calc(100vw - 40px)}
+  .hero-inner{padding-top:64px}
+  .hero h1{font-size:64px}
+  .lead1{font-size:20px}
+  .lead2{font-size:16.5px}
+  .site-search{margin-top:22px}
+  .console{margin-top:36px;padding:12px}
+  .console-grid{grid-template-columns:repeat(3,1fr)}
+  .band{padding:40px 0}
+  .sec-head h2,.sec-title h2,.mail-card h2{font-size:23px}
+  .sec-sub{font-size:15.5px}
+  .card{padding:20px}
+  .two-col,.chat-grid,.res-grid{grid-template-columns:1fr}
+  .helper-card{padding:22px}
+  /* 모바일에서는 한 줄 잘림 대신 전체 문장을 보여준다 */
+  .helper-desc{font-size:16.5px;white-space:normal;overflow:visible;text-overflow:clip;word-break:keep-all}
+  .mail-card{padding:24px 22px;gap:20px}
+  /* 넓은 표·코드 블록은 가로 스크롤로 감싼다 */
+  .scroll-x{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .band table,.band pre,.card table,.card pre{display:block;width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+}
+@media (max-width:520px){
+  .shell{padding:0 16px}
+  /* 상단 메뉴는 세로로 접히지 않고 한 줄을 유지하며, 넘치면 가로로 밀어서 본다 */
+  .nav-inner{height:56px;gap:8px;flex-wrap:nowrap}
+  .logo-pill{padding:5px 9px}
+  .logo-pill img{height:16px}
+  .lang-btn{font-size:11px;padding:4px 7px}
+  .nav-links{min-width:0;flex-wrap:nowrap;white-space:nowrap;overflow-x:auto;overflow-y:hidden;font-size:13.5px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .nav-links::-webkit-scrollbar{display:none}
+  .nav-links>a,.team-btn{flex:none}
+  .nav-links>a{padding:6px 7px}
+  .team-btn{margin-left:4px;font-size:13px;padding:6px 11px;gap:5px}
+  .team-pop{top:50px;right:12px;width:calc(100vw - 24px);max-height:78vh}
+  .tp-row{grid-template-columns:1fr;gap:9px;align-items:start;padding:12px 10px}
+  .eyebrow{font-size:10.5px;letter-spacing:.14em;margin-bottom:14px}
+  .hero-inner{padding-top:44px}
+  .hero h1{font-size:44px}
+  .lead1{font-size:18.5px;margin-top:18px}
+  .lead2{font-size:15.5px}
+  .site-search{margin-top:18px}
+  #ssInput{font-size:15px}
+  .ss-txt strong{font-size:14.5px}
+  .ss-txt span{font-size:12.5px}
+  .console{margin-top:28px;padding:10px;border-radius:18px}
+  .console-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .console-grid>.ql:last-child{grid-column:1/-1}
+  .ql{padding:13px 11px;gap:6px;border-radius:13px}
+  .ql .ic{font-size:17px}
+  /* 바로가기 이름은 한 글자씩 끊기지 않게 한 줄로 */
+  .ql strong{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;word-break:keep-all}
+  .ql small{font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .band{padding:30px 0}
+  .sec-head{gap:10px;margin-bottom:16px}
+  .sec-head h2,.sec-title h2,.mail-card h2{font-size:20px}
+  .sec-sub{font-size:14.5px}
+  .head-row{flex-direction:column;align-items:flex-start;gap:14px}
+  .head-row>div{align-items:flex-start!important;width:100%}
+  .btn-cta{font-size:15px;padding:11px 18px}
+  .card{padding:16px}
+  .card-title{font-size:17px}
+  .sched-item{gap:10px;padding:13px 0}
+  .dday{min-width:50px;font-size:12.5px;padding:4px 6px}
+  .sched-body strong{font-size:15px}
+  .feed-item a{padding:13px 4px 13px 0}
+  .feed-body strong,.card.sched-lite .empty{font-size:15px}
+  .mini-label{font-size:15.5px;margin-bottom:14px}
+  .steps p{font-size:15px}
+  .chips button{font-size:14.5px;padding:12px 13px}
+  .helper-card{padding:18px;border-radius:17px}
+  .helper-desc{font-size:15.5px;margin-bottom:18px}
+  .resource{padding:15px 16px;gap:12px}
+  .resource strong{font-size:15.5px}
+  .resource small{font-size:13.5px}
+  .mail-card{flex-direction:column;align-items:flex-start;padding:22px 18px;gap:16px}
+  .mail-card p{font-size:15.5px}
+  .btn-white{width:100%;justify-content:center;font-size:15px;padding:13px 20px}
+  .footer-inner{gap:12px}
+  .f-note{margin-left:0;font-size:13px}
+  .toast{bottom:20px;max-width:calc(100vw - 32px);font-size:14px}
+  #splash .sp-word{font-size:46px}
+  #splash .sp-eyebrow{font-size:10.5px;letter-spacing:.2em}
+}
 </style>
 </head>
 <body>
@@ -202,6 +347,14 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:28px 0}
     <h1>KAS<span class="brand-i">I</span>Log</h1>
     <p class="lead1" data-i18n="hero_lead1">“연구행정 언제든지 물어보세요”</p>
     <p class="lead2" data-i18n="hero_lead2">우주항공청 사업공고부터, 혁신법 기반 AI 챗봇, 연구비 편성 도우미까지.</p>
+    <!-- 사이트 내 검색: 페이지 안의 내용만 찾는다(외부 호출 없음) -->
+    <div class="site-search" id="siteSearch">
+      <div class="ss-box">
+        <span class="ss-ic" aria-hidden="true">🔍</span>
+        <input id="ssInput" type="search" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="ssResults" aria-label="사이트 내 검색" placeholder="무엇을 찾으세요? 예: 연구수당, 협약변경, 정산 기한" data-i18n-ph="search_ph">
+      </div>
+      <div class="ss-drop" id="ssResults" role="listbox" hidden></div>
+    </div>
     <div class="console">
       <div class="console-grid">
         <a class="ql" href="#schedule"><span class="ic">🌙</span><strong data-i18n="ql_sched">주요일정</strong><small class="sg" id="qlSchedule">일정 확인</small></a>
@@ -223,10 +376,10 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:28px 0}
       <span class="sec-sub" data-i18n="sec_cal_s">주요일정과 우주항공청 사업공고를 한 화면에서</span>
     </div>
     <div class="two-col">
-      <div class="card" style="padding-bottom:12px">
+      <div class="card" id="schedCard" style="padding-bottom:12px">
         <div class="feed-head"><span class="card-title"><span>🌙</span><span data-i18n="card_sched">주요일정</span></span></div>
         <ul class="plain" id="schedList"></ul>
-        <p class="empty" id="schedEmpty" hidden data-i18n="sched_empty">현재 예정된 일정이 없습니다. 새로운 일정이 생기면 표시됩니다.</p>
+        <p class="empty" id="schedEmpty" hidden data-i18n="sched_empty">현재 예정된 일정이 없습니다.</p>
         <div style="height:12px"></div>
       </div>
       <div class="card">
@@ -308,6 +461,17 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:28px 0}
   </div>
 </section>
 
+<!-- 도움 여부 피드백: 집계는 방문자 브라우저(localStorage)에만 남는다 -->
+<div class="shell fb-wrap">
+  <div class="feedback" id="feedback">
+    <p class="fb-q" data-i18n="fb_q">KASILog가 도움이 되셨나요? 의견을 주시면 적극 반영하겠습니다.</p>
+    <div class="fb-btns">
+      <button type="button" class="fb-btn" id="fbUp" aria-label="도움이 되었다는 의견 보내기">👍</button>
+      <button type="button" class="fb-btn" id="fbDown" aria-label="개선 의견 보내기">👎</button>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div class="shell footer-inner">
     <span class="f-logo"><img src="data:image/png;base64,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" alt="KASILog"></span>
@@ -363,7 +527,7 @@ var I18N = {
     hero_lead2:"우주항공청 사업공고부터, 혁신법 기반 AI 챗봇, 연구비 편성 도우미까지.",
     ql_sched:"주요일정",ql_kasa:"사업공고",ql_chat:"KASILog 챗봇",ql_chat_s:"규정·법령 질문",ql_helper:"연구비 편성 도우미",ql_helper_s:"편성 자동 계산",ql_team:"업무분장",ql_team_s:"담당자 찾기",
     sec_cal:"KASILog 캘린더",sec_cal_s:"주요일정과 우주항공청 사업공고를 한 화면에서",
-    card_sched:"주요일정",card_feed:"우주항공청 사업공고",feed_go:"공고 게시판 ↗",sched_empty:"현재 예정된 일정이 없습니다. 새로운 일정이 생기면 표시됩니다.",
+    card_sched:"주요일정",card_feed:"우주항공청 사업공고",feed_go:"공고 게시판 ↗",sched_empty:"현재 예정된 일정이 없습니다.",
     sec_chat:"KASILog 챗봇",sec_chat_s:"연구과제 관련 법령·규정, 궁금한 것부터 물어보세요",chat_open:"챗봇 열기",chat_google:"Google 계정 로그인이 필요합니다.",
     chat_howto:"사용방법",chat_s1:"연구과제 관련 법령·규정 등 궁금한 내용을 질문합니다.",chat_s2:"매뉴얼·규정 원문을 살펴보며 진위를 검증합니다.",
     chat_s3a:"보완이 필요한 내용은 ",chat_s3b:"으로 제출해주세요.",
@@ -379,6 +543,10 @@ var I18N = {
     dyn_loading:"최신 공고를 불러오는 중…",dyn_fail:"실시간 목록을 불러오지 못했습니다. 공고 게시판 버튼으로 확인해주세요.",
     dyn_updated:"업데이트",dyn_posted:"게시일",dyn_src:"우주항공청",dyn_board:"게시판 바로가기",
     dyn_upcoming:function(n){return "다가오는 일정 "+n+"건"},dyn_sched_default:"일정 확인",dyn_new:function(n){return "신규 공고 "+n+"건"},dyn_recent:function(n){return "최근 "+n+"건 표시 중"},
+    fb_q:"KASILog가 도움이 되셨나요? 의견을 주시면 적극 반영하겠습니다.",fb_thanks:"의견 감사합니다 ✨",
+    search_ph:"무엇을 찾으세요? 예: 연구수당, 협약변경, 정산 기한",
+    search_t_sec:"사이트",search_t_team:"담당자",search_t_form:"자료",search_t_calc:"계산기",
+    search_empty:"검색 결과가 없습니다",search_empty_s:"KASILog 챗봇에 물어보세요",
     toast_copy:"질문이 복사되었습니다 ✨",toast_fail:"복사에 실패했습니다. 직접 입력해주세요.",
     fmt_date:function(d){return d.getFullYear()+"년 "+(d.getMonth()+1)+"월 "+d.getDate()+"일 ("+"일월화수목금토"[d.getDay()]+")"}
   },
@@ -389,7 +557,7 @@ var I18N = {
     hero_lead2:"From KASA program notices to the innovation-act AI chatbot and the budget-planning helper.",
     ql_sched:"Schedule",ql_kasa:"Notices",ql_chat:"KASILog Chatbot",ql_chat_s:"Rules & regulations",ql_helper:"Budget Helper",ql_helper_s:"Automatic calculation",ql_team:"Team & Duties",ql_team_s:"Find the owner",
     sec_cal:"KASILog Calendar",sec_cal_s:"Key dates and KASA notices on one screen",
-    card_sched:"Key Schedule",card_feed:"KASA Program Notices",feed_go:"Notice board ↗",sched_empty:"No upcoming events. New items will appear here.",
+    card_sched:"Key Schedule",card_feed:"KASA Program Notices",feed_go:"Notice board ↗",sched_empty:"No upcoming events.",
     sec_chat:"KASILog Chatbot",sec_chat_s:"Ask anything about R&D laws and regulations",chat_open:"Open chatbot",chat_google:"A Google account sign-in is required.",
     chat_howto:"How to use",chat_s1:"Ask about R&D-related laws, regulations, and internal rules.",chat_s2:"Verify answers against the original manuals and regulations.",
     chat_s3a:"Send anything that needs improvement to the ",chat_s3b:".",
@@ -405,6 +573,10 @@ var I18N = {
     dyn_loading:"Loading the latest notices…",dyn_fail:"Could not load the live list. Please use the notice-board button.",
     dyn_updated:"Updated",dyn_posted:"Posted",dyn_src:"KASA",dyn_board:"Go to board",
     dyn_upcoming:function(n){return n+" upcoming"},dyn_sched_default:"View schedule",dyn_new:function(n){return n+" new notices"},dyn_recent:function(n){return "showing latest "+n},
+    fb_q:"Has KASILog been helpful? Tell us and we will act on it.",fb_thanks:"Thanks for the feedback ✨",
+    search_ph:"What are you looking for? e.g. allowance, agreement change, settlement",
+    search_t_sec:"Section",search_t_team:"Staff",search_t_form:"File",search_t_calc:"Calculator",
+    search_empty:"No results",search_empty_s:"Try the KASILog chatbot",
     toast_copy:"Question copied ✨",toast_fail:"Copy failed — please type it manually.",
     fmt_date:function(d){return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d.getMonth()]+" "+d.getDate()+", "+d.getFullYear()}
   }
@@ -428,7 +600,7 @@ function applyLang(lang){
   });
   document.documentElement.lang = lang === "en" ? "en" : "ko";
   document.querySelectorAll(".lang-btn").forEach(function(b){ b.classList.toggle("active", b.dataset.lang === lang); });
-  renderSchedule(); renderTeam($("#teamSearch").value); renderFeed(); renderChips();
+  renderSchedule(); renderTeam($("#teamSearch").value); renderFeed(); renderChips(); buildSearchIndex();
 }
 
 var toastTid;
@@ -454,6 +626,9 @@ function renderSchedule(){
     return '<li class="sched-item"><span class="dday '+cls+'">'+label+'</span><div class="sched-body"><strong title="'+esc(title)+'"><span class="sched-org">'+esc(org)+'</span>'+esc(title)+'</strong><span class="meta">'+L("fmt_date")(x.d)+'</span></div></li>';
   }).join("");
   $("#schedEmpty").hidden = items.length > 0;
+  // 일정이 없으면 카드를 축소해 빈 상자로 보이지 않게 한다
+  var schedCard = $("#schedCard");
+  if (schedCard) schedCard.classList.toggle("sched-lite", items.length === 0);
   $("#qlSchedule").textContent = items.length ? L("dyn_upcoming")(items.length) : L("dyn_sched_default");
 }
 
@@ -470,9 +645,9 @@ function loadFeed(){
           return { title: it.title, dateStr: it.date ? it.date.replace(/-/g,".") : "", dateObj: it.date ? new Date(it.date+"T00:00:00") : null, href: it.href || CONFIG.KASA_LIST_URL };
         })};
       } else feedCache = "fail";
-      renderFeed();
+      renderFeed(); buildSearchIndex();
     })
-    .catch(function(){ feedCache = "fail"; renderFeed(); });
+    .catch(function(){ feedCache = "fail"; renderFeed(); buildSearchIndex(); });
 }
 function renderFeed(){
   if (feedCache === null) return;
@@ -535,6 +710,209 @@ function renderChips(){
   });
 }
 
+
+/* ── 사이트 내 검색 (모든 처리를 방문자 브라우저에서만 한다) ── */
+var CALCS = [
+  { href:"kasi-allowance-calculator.html",
+    ko:{ t:"연구수당 한도 계산기", k:"연구수당 수정인건비 한도 단계 1인 지급률 집행 사전점검" },
+    en:{ t:"Research Allowance Calculator", k:"allowance labour cost limit stage payment rate pre-check" } },
+  { href:"kasi-budget-helper.html",
+    ko:{ t:"연구비 편성 도우미", k:"연구비 편성 직접비 간접비 사업공고문 분석 연심 연구업무심의회 예산" },
+    en:{ t:"Research Budget Helper", k:"budget planning direct indirect cost notice analysis commission review" } }
+];
+// 검색 보강 (2026-09-07): 안내 문구의 예시 "협약변경", "정산 기한"이 0건이던 문제를 고친다.
+// 사이트 본문에 그 낱말이 없어도, 실무에서 자주 치는 말이 갈 곳을 찾게 한다.
+var SEARCH_TOPICS = [
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"협약변경 — 승인 대상인가 통보 대상인가", s:"승인·통보 구분과 신청 절차는 챗봇에 물어보세요.",
+         k:"협약변경 협약 변경 승인성 통보성 승인 통보 예산변경 과제변경 변경신청 간접비 증액 감액 연구책임자 장비 위탁" },
+    en:{ t:"Agreement change — approval or notification", s:"Ask the chatbot which changes need prior approval.",
+         k:"agreement change approval notification budget change task change" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"정산·보고 기한", s:"정산과 사용실적보고 기한은 챗봇에 물어보세요.",
+         k:"정산 위탁정산 사용실적보고 실적보고 기한 마감 제출 종료 잔액 반납" },
+    en:{ t:"Settlement and report deadlines", s:"Ask the chatbot about settlement and report deadlines.",
+         k:"settlement report deadline submission balance" } },
+  { kind:"team", target:"",
+    ko:{ t:"사업관리실 업무분장", s:"어느 담당자에게 문의할지 찾습니다.",
+         k:"업무분장 담당 담당자 누구 누가 문의 연락 배정" },
+    en:{ t:"Team assignments", s:"Find the right staff member to contact.",
+         k:"team assignment staff who contact" } },
+  { kind:"sec", target:"#schedule",
+    ko:{ t:"사업공고", s:"우주항공청 사업공고를 최근 순으로 보여줍니다.",
+         k:"사업공고 공고 공모 수요조사 접수 신규과제 우주항공청" },
+    en:{ t:"Program notices", s:"Recent KASA program notices.",
+         k:"notice announcement call for proposals" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"연구비카드·집행", s:"카드 발급과 집행 등록 절차는 챗봇에 물어보세요.",
+         k:"연구비카드 카드 발급 재사용 집행 집행등록 이지바로 EZBARO IRIS RCMS 통합이지바로" },
+    en:{ t:"Research card and execution", s:"Ask the chatbot about card issuance and execution.",
+         k:"research card execution EZBARO IRIS RCMS" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"연구보안", s:"연구보안 관련 문의는 챗봇에 물어보세요.",
+         k:"연구보안 보안 보안수당 보안서약 반출 보안점검 겸직 외국인" },
+    en:{ t:"Research security", s:"Ask the chatbot about research security.",
+         k:"research security clearance" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"신규과제 신청·협약체결", s:"신청부터 협약까지 절차를 챗봇에 물어보세요.",
+         k:"신규 신규과제 신청 제안서 연구계획서 연차실적계획서 협약 협약체결 선정 공모 접수 심의 연심 연구업무심의회 원장승인 결재선" },
+    en:{ t:"New task application and agreement", s:"Ask the chatbot about the application-to-agreement steps.",
+         k:"new task application proposal plan agreement screening" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"인건비·연구수당·보안수당", s:"인건비와 수당 기준은 챗봇에 물어보세요. 한도 계산은 계산기를 쓰세요.",
+         k:"인건비 내부인건비 학생인건비 참여율 연구수당 보안수당 수당 지급신청 평가신청 수정인건비 계상" },
+    en:{ t:"Labor cost and allowances", s:"Ask the chatbot about labor cost and allowance rules.",
+         k:"labor cost student allowance participation rate" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"집행률·잔액·예실대비표", s:"집행 현황과 잔액 확인 방법은 챗봇에 물어보세요.",
+         k:"집행률 집행 잔액 흡수 예실대비표 예실 대비표 이월 반납 불인정 증빙 영수증" },
+    en:{ t:"Execution rate and balance", s:"Ask the chatbot how to check execution and balance.",
+         k:"execution rate balance carryover evidence" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"국제·민간 수탁 (환율·인보이스)", s:"국제수탁 관련 문의는 챗봇에 물어보세요.",
+         k:"국제 국제수탁 민간 민간수탁 환율 환차익 인보이스 invoice 외화 송금 GMT 제미니 해외" },
+    en:{ t:"International and private contracts", s:"Ask the chatbot about international contract work.",
+         k:"international private contract exchange rate invoice" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"장비·시설 구입", s:"연구시설·장비 구입과 심의는 챗봇에 물어보세요.",
+         k:"장비 연구장비 시설 구입 도입 장비심의 심의 리스 임차 자산" },
+    en:{ t:"Equipment and facilities", s:"Ask the chatbot about equipment purchases.",
+         k:"equipment facility purchase screening" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"부가세·세금", s:"부가세 산입과 세금 처리는 챗봇에 물어보세요.",
+         k:"부가세 부가가치세 세금 산입 확정 예정 원천징수 세액" },
+    en:{ t:"VAT and taxes", s:"Ask the chatbot about VAT handling.",
+         k:"VAT tax withholding" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"수입의뢰·선수금", s:"수입의뢰와 선수금 처리는 챗봇에 물어보세요.",
+         k:"수입의뢰 수입 의뢰 선수금 대체 입금 청구 연구비청구 교부" },
+    en:{ t:"Revenue request and advance payment", s:"Ask the chatbot about revenue and advance handling.",
+         k:"revenue request advance payment claim" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"연구노트·연구윤리", s:"연구노트와 연구윤리 문의는 챗봇에 물어보세요.",
+         k:"연구노트 노트 연구윤리 윤리 IRB 생명윤리 부정행위" },
+    en:{ t:"Research notes and ethics", s:"Ask the chatbot about research notes and ethics.",
+         k:"research note ethics IRB" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"위탁·전문가활용", s:"위탁연구와 전문가활용비는 챗봇에 물어보세요.",
+         k:"위탁 위탁연구 위탁기관 전문가활용 외부전문기술활용 용역 자문료" },
+    en:{ t:"Subcontracts and expert fees", s:"Ask the chatbot about subcontracts and expert fees.",
+         k:"subcontract expert fee consulting" } },
+  { kind:"sec", target:"#chatbot",
+    ko:{ t:"성과관리·기술이전", s:"성과와 기술이전 문의는 챗봇에 물어보세요.",
+         k:"성과 성과관리 기술이전 직무발명 특허 논문 실적" },
+    en:{ t:"Outcomes and tech transfer", s:"Ask the chatbot about outcomes and tech transfer.",
+         k:"outcome tech transfer patent invention" } },
+  { kind:"sec", target:"#mailbox",
+    ko:{ t:"건의·문의 보내기 (우체통)", s:"고쳤으면 하는 것, 물어볼 것을 남겨주세요.",
+         k:"우체통 건의 문의 제안 요청 피드백 의견 오류 신고 개선" },
+    en:{ t:"Send feedback (mailbox)", s:"Leave a request or a question.",
+         k:"mailbox feedback request suggestion report" } }
+];
+// 섹션마다 본문에 없는 검색어를 덧붙인다
+var SEC_KEYS = {
+  schedule:"주요일정 일정 캘린더 공고 사업공고",
+  chatbot:"챗봇 질문 규정 법령 혁신법 국가연구개발혁신법 관리규정 요령 편람 문의 상담 IRIS EZBARO 이지바로 RCMS PMS MIS 시스템",
+  helper:"연구비 편성 도우미 직접비 간접비 공고문 연심 연구업무심의회 예산 계상 계상기준 배분 총괄표",
+  mailbox:"우체통 건의 제안 피드백 요청"
+};
+var SEARCH_INDEX = [];
+function collapse(t){ return String(t || "").replace(/\s+/g, " ").trim(); }
+function buildSearchIndex(){
+  var en = window.uiLang === "en", ix = [];
+  document.querySelectorAll("section[id]").forEach(function(sec){
+    var h = sec.querySelector("h2");
+    if (!h) return;
+    ix.push({ tag:L("search_t_sec"), title:collapse(h.textContent), body:collapse(sec.innerText || sec.textContent), keys:(SEC_KEYS[sec.id] || ""), kind:"sec", target:"#"+sec.id });
+  });
+  TEAM.forEach(function(p){
+    var name = en && p.nameEn ? p.nameEn : p.name;
+    var duties = (en && p.dutiesEn ? p.dutiesEn : p.duties).join(" · ");
+    ix.push({ tag:L("search_t_team"), title:name, body:duties, keys:"담당 담당자 업무분장 문의", kind:"team", target:p.name });
+  });
+  document.querySelectorAll(".resource[download]").forEach(function(a){
+    var s = a.querySelector("strong"), sm = a.querySelector("small");
+    ix.push({ tag:L("search_t_form"), title:collapse(s ? s.textContent : a.textContent), body:collapse(sm ? sm.textContent : ""), keys:"양식 서식 자료 다운로드 파일", kind:"link", target:a.getAttribute("href") });
+  });
+  CALCS.forEach(function(c){
+    var t = en ? c.en : c.ko;
+    ix.push({ tag:L("search_t_calc"), title:t.t, body:t.k, keys:"계산기 계산 한도", kind:"link", target:c.href });
+  });
+  SEARCH_TOPICS.forEach(function(tp){
+    var x = en ? tp.en : tp.ko;
+    ix.push({ tag:(tp.kind === "team" ? L("search_t_team") : L("search_t_sec")),
+              title:x.t, body:x.s, keys:x.k, kind:tp.kind, target:tp.target });
+  });
+  SEARCH_INDEX = ix;
+}
+function searchSite(q){
+  q = collapse(q).toLowerCase();
+  if (!q) return [];
+  // 낱말을 따로 본다. "정산 기한"처럼 붙어 있지 않은 말도 찾히게 하려는 것이다.
+  var toks = q.split(" ").filter(function(t){ return t.length > 0; });
+  var hits = [];
+  SEARCH_INDEX.forEach(function(it){
+    var lt = it.title.toLowerCase(), lb = it.body.toLowerCase(), lk = (it.keys || "").toLowerCase();
+    var all = lt + " | " + lk + " | " + lb;
+    for (var i = 0; i < toks.length; i++){ if (all.indexOf(toks[i]) === -1) return; }  // 낱말이 전부 있어야 한다
+    var f = toks[0], inT = lt.indexOf(f), inK = lk.indexOf(f), inB = lb.indexOf(f), snip;
+    if (inB === -1) snip = it.body.slice(0, 74);
+    else {
+      var st = Math.max(0, inB - 22);
+      snip = (st > 0 ? "…" : "") + it.body.slice(st, st + 76) + (st + 76 < it.body.length ? "…" : "");
+    }
+    hits.push({ it:it, snip:snip, score:(inT === 0 ? 0 : (inT > 0 ? 1 : (inK !== -1 ? 2 : 3))) });
+  });
+  hits.sort(function(a,b){ return a.score - b.score; });
+  return hits.slice(0, 8);
+}
+var ssHits = [], ssIdx = -1, ssTid;
+function ssClose(){
+  var b = $("#ssResults");
+  b.hidden = true; b.innerHTML = ""; ssHits = []; ssIdx = -1;
+  $("#ssInput").setAttribute("aria-expanded", "false");
+}
+function ssMark(){
+  $("#ssResults").querySelectorAll(".ss-row").forEach(function(b,i){ b.classList.toggle("on", i === ssIdx); });
+}
+function ssRender(hits){
+  ssHits = hits; ssIdx = -1;
+  var box = $("#ssResults");
+  if (!hits.length){
+    box.innerHTML = '<button type="button" class="ss-row" data-i="-2"><span class="ss-tag">?</span><span class="ss-txt"><strong>'+esc(L("search_empty"))+'</strong><span>'+esc(L("search_empty_s"))+'</span></span></button>';
+  } else {
+    box.innerHTML = hits.map(function(h,i){
+      return '<button type="button" class="ss-row" role="option" data-i="'+i+'"><span class="ss-tag">'+esc(h.it.tag)+'</span><span class="ss-txt"><strong>'+esc(h.it.title)+'</strong><span>'+esc(h.snip)+'</span></span></button>';
+    }).join("");
+  }
+  box.hidden = false;
+  $("#ssInput").setAttribute("aria-expanded", "true");
+  box.querySelectorAll(".ss-row").forEach(function(b){
+    b.addEventListener("mousedown", function(e){ e.preventDefault(); ssGo(Number(b.getAttribute("data-i"))); });
+  });
+}
+function ssGo(i){
+  if (i === -2){
+    ssClose();
+    var c = document.querySelector("#chatbot");
+    if (c) c.scrollIntoView({behavior:"smooth", block:"start"});
+    return;
+  }
+  var h = ssHits[i];
+  if (!h) return;
+  var it = h.it;
+  ssClose(); $("#ssInput").blur();
+  if (it.kind === "link"){ window.open(it.target, "_blank", "noopener"); return; }
+  if (it.kind === "team"){
+    window.scrollTo({top:0, behavior:"smooth"});
+    openTeam(true);
+    $("#teamSearch").value = it.target; renderTeam(it.target);
+    return;
+  }
+  var el = document.querySelector(it.target);
+  if (el) el.scrollIntoView({behavior:"smooth", block:"start"});
+}
+
 function drawStars(){
   var c = $("#stars"), host = c.parentElement;
   var w = host.offsetWidth, h = host.offsetHeight;
@@ -570,6 +948,44 @@ document.addEventListener("keydown", function(e){ if (e.key === "Escape") openTe
 $("#teamSearch").addEventListener("input", function(e){ renderTeam(e.target.value); });
 document.querySelectorAll(".lang-btn").forEach(function(b){ b.addEventListener("click", function(){ applyLang(b.dataset.lang); }); });
 
+
+/* ── 도움 여부 피드백 (수치는 이 브라우저에만 저장, 외부 전송 없음) ── */
+function fbKey(k){ return "kasilog-fb-" + k + ":" + (location.pathname.split("/").pop() || "index.html"); }
+function fbBump(k){
+  try { localStorage.setItem(fbKey(k), String(Number(localStorage.getItem(fbKey(k)) || 0) + 1)); } catch(e){}
+}
+// 좋다는 의견도 받는다 (유승님 지정 2026-09-08). 양쪽 모두 우체통을 연다.
+function fbOpenMailbox(){
+  var mb = document.querySelector(".mail-card .btn-white");
+  if (mb) window.open(mb.getAttribute("href"), "_blank", "noopener");
+}
+$("#fbUp").addEventListener("click", function(){ fbBump("up"); showToast(L("fb_thanks")); fbOpenMailbox(); });
+$("#fbDown").addEventListener("click", function(){ fbBump("down"); fbOpenMailbox(); });
+
+/* ── 검색창 이벤트 ── */
+$("#ssInput").addEventListener("input", function(){
+  var v = this.value;
+  clearTimeout(ssTid);
+  ssTid = setTimeout(function(){
+    if (!collapse(v)){ ssClose(); return; }
+    ssRender(searchSite(v));
+  }, 160);
+});
+$("#ssInput").addEventListener("focus", function(){ if (collapse(this.value)) ssRender(searchSite(this.value)); });
+$("#ssInput").addEventListener("keydown", function(e){
+  var rows = $("#ssResults").querySelectorAll(".ss-row"), n = rows.length;
+  if (e.key === "ArrowDown" && n){ e.preventDefault(); ssIdx = (ssIdx + 1) % n; ssMark(); }
+  else if (e.key === "ArrowUp" && n){ e.preventDefault(); ssIdx = (ssIdx <= 0 ? n - 1 : ssIdx - 1); ssMark(); }
+  else if (e.key === "Enter"){
+    e.preventDefault();
+    if (!n){ if (collapse(this.value)) ssRender(searchSite(this.value)); return; }
+    ssGo(Number(rows[ssIdx >= 0 ? ssIdx : 0].getAttribute("data-i")));
+  }
+  else if (e.key === "Escape"){ ssClose(); this.blur(); }
+});
+document.addEventListener("click", function(e){ if (!$("#siteSearch").contains(e.target)) ssClose(); });
+document.addEventListener("keydown", function(e){ if (e.key === "Escape") ssClose(); });
+
 (function visits(){
   var key = "kasilog-kasi-pmo";
   var day = new Date(Date.now()+324e5).toISOString().slice(0,10).replace(/-/g,"");
@@ -595,5 +1011,7 @@ try { savedLang = localStorage.getItem("kasilog-lang") || "ko"; } catch(e){}
 applyLang(savedLang === "en" ? "en" : "ko");
 loadFeed();
 </script>
+<!-- 사용 통계: Cloudflare Web Analytics (쿠키 없음). CF_ANALYTICS_TOKEN_HERE 를 Cloudflare 대시보드에서 발급한 실제 토큰으로 바꿔주세요. -->
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "CF_ANALYTICS_TOKEN_HERE"}'></script>
 </body>
 </html>
