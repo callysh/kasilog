@@ -174,26 +174,42 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:28px 0}
 
 /* ── 사이트 내 검색창 ── */
 .site-search{position:relative;max-width:540px;margin:26px auto 0;text-align:left;z-index:40}
-.ss-box{position:relative;display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.06);border:2px solid rgba(198,166,100,.38);border-radius:14px;padding:10px 13px}
+.ss-box{position:relative;display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.2);border-radius:14px;padding:10px 13px}
 /* 금색 테두리가 천천히 한 바퀴 흐른다. 쨍한 금색이 아니라 샴페인색이다 (유승님 지정 2026-09-08).
    테두리만 칠하려고 mask 두 장을 겹쳐 안쪽을 파낸다. */
 .ss-box::before{
   content:"";position:absolute;inset:-2px;border-radius:16px;padding:2px;pointer-events:none;
   background:linear-gradient(100deg,
-    rgba(198,166,100,0) 28%, rgba(210,182,122,.7) 42%, rgba(240,224,182,1) 50%,
-    rgba(210,182,122,.7) 58%, rgba(198,166,100,0) 72%);
+    rgba(198,166,100,0) 18%, rgba(206,178,116,.5) 32%, rgba(226,203,150,.9) 43%,
+    rgba(246,232,196,1) 50%, rgba(226,203,150,.9) 57%, rgba(206,178,116,.5) 68%,
+    rgba(198,166,100,0) 82%);
   background-size:260% 100%;background-repeat:no-repeat;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite:exclude;
   animation:ssGold 7s linear infinite;
 }
+/* 같은 띠를 흐릿하게 한 겹 더 깔아 빛무리를 만든다. 테두리 바깥으로 번진다 (유승님 지정 2026-09-08) */
+.ss-box::after{
+  content:"";position:absolute;inset:-9px;border-radius:23px;padding:11px;pointer-events:none;
+  background:linear-gradient(100deg,
+    rgba(198,166,100,0) 18%, rgba(206,178,116,.42) 34%, rgba(232,210,160,.72) 44%,
+    rgba(246,232,196,.85) 50%, rgba(232,210,160,.72) 56%, rgba(206,178,116,.42) 66%,
+    rgba(198,166,100,0) 82%);
+  background-size:260% 100%;background-repeat:no-repeat;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  filter:blur(7px);
+  animation:ssGold 7s linear infinite;
+}
 @keyframes ssGold{ from{background-position:210% 0} to{background-position:-60% 0} }
-.ss-box:focus-within{border-color:rgba(222,194,132,.7);background:rgba(255,255,255,.09)}
-.ss-box:focus-within::before{animation-duration:3.4s}
+.ss-box:focus-within{border-color:rgba(255,255,255,.34);background:rgba(255,255,255,.09)}
+.ss-box:focus-within::before,.ss-box:focus-within::after{animation-duration:3.4s}
 /* 움직임을 줄이도록 설정한 사람에게는 흐르지 않고 금색 테두리만 남긴다 */
 @media (prefers-reduced-motion: reduce){
   .ss-box::before{animation:none;background-position:50% 0}
+  .ss-box::after{display:none}
 }
 .ss-ic{flex:none;font-size:15px;opacity:.75}
 #ssInput{flex:1;min-width:0;background:transparent;border:0;outline:none;color:#e9edf8;font-size:15.5px}
