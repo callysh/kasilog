@@ -501,7 +501,10 @@ var SCHEDULE = [
   {date:"2026-05-31",org:"사업관리실",title:"국가연구개발사업 R&D 신문고 의견수렴",orgEn:"PMO",titleEn:"National R&D Sinmungo opinion collection"},
   {date:"2026-06-10",org:"우주항공청",title:"2026년도 신규프로젝트 탐색연구 사전설명회",orgEn:"KASA",titleEn:"2026 new-project exploratory research briefing"},
   {date:"2026-06-19",org:"한국연구재단",title:"2026년 권역별 연구개발비 교육 개최",orgEn:"NRF",titleEn:"2026 regional R&D expense training"},
-  {date:"2026-07-22",org:"연구업무심의회",title:"제6회 연구업무심의회(대면)",orgEn:"Task Commission",titleEn:"6th Research Task Commission (in person)"}
+  {date:"2026-07-22",org:"연구업무심의회",title:"제6회 연구업무심의회(대면)",orgEn:"Task Commission",titleEn:"6th Research Task Commission (in person)"},
+  {date:"2026-09-10",org:"한국천문연구원",title:"제52주년 창립기념일 행사",orgEn:"KASI",titleEn:"52nd Anniversary Ceremony"},
+  {date:"2026-09-11",org:"한국천문연구원",title:"제52주년 창립기념휴일",orgEn:"KASI",titleEn:"52nd Anniversary Holiday"},
+  {date:"2026-09-24",end:"2026-09-25",org:"휴일",title:"추석연휴",orgEn:"Holiday",titleEn:"Chuseok holiday"}
 ];
 var TEAM = [
   {name:"장미선",nameEn:"Jang Misun",email:"msjang",ext:"3347",lead:true,duties:["사업관리 업무 총괄"],dutiesEn:["Overall program management"]},
@@ -527,7 +530,7 @@ var I18N = {
     hero_lead2:"우주항공청 사업공고부터, 혁신법 기반 AI 챗봇, 연구비 편성 도우미까지.",
     ql_sched:"주요일정",ql_kasa:"사업공고",ql_chat:"KASILog 챗봇",ql_chat_s:"규정·법령 질문",ql_helper:"연구비 편성 도우미",ql_helper_s:"편성 자동 계산",ql_team:"업무분장",ql_team_s:"담당자 찾기",
     sec_cal:"KASILog 캘린더",sec_cal_s:"주요일정과 우주항공청 사업공고를 한 화면에서",
-    card_sched:"주요일정",card_feed:"우주항공청 사업공고",feed_go:"공고 게시판 ↗",sched_empty:"현재 예정된 일정이 없습니다.",
+    card_sched:"주요일정",card_feed:"우주항공청 사업공고",feed_go:"공고 게시판 ↗",sched_empty:"현재 예정된 일정이 없습니다.",sched_now:"진행 중",
     sec_chat:"KASILog 챗봇",sec_chat_s:"연구과제 관련 법령·규정, 궁금한 것부터 물어보세요",chat_open:"챗봇 열기",chat_google:"Google 계정 로그인이 필요합니다.",
     chat_howto:"사용방법",chat_s1:"연구과제 관련 법령·규정 등 궁금한 내용을 질문합니다.",chat_s2:"매뉴얼·규정 원문을 살펴보며 진위를 검증합니다.",
     chat_s3a:"보완이 필요한 내용은 ",chat_s3b:"으로 제출해주세요.",
@@ -557,7 +560,7 @@ var I18N = {
     hero_lead2:"From KASA program notices to the innovation-act AI chatbot and the budget-planning helper.",
     ql_sched:"Schedule",ql_kasa:"Notices",ql_chat:"KASILog Chatbot",ql_chat_s:"Rules & regulations",ql_helper:"Budget Helper",ql_helper_s:"Automatic calculation",ql_team:"Team & Duties",ql_team_s:"Find the owner",
     sec_cal:"KASILog Calendar",sec_cal_s:"Key dates and KASA notices on one screen",
-    card_sched:"Key Schedule",card_feed:"KASA Program Notices",feed_go:"Notice board ↗",sched_empty:"No upcoming events.",
+    card_sched:"Key Schedule",card_feed:"KASA Program Notices",feed_go:"Notice board ↗",sched_empty:"No upcoming events.",sched_now:"Ongoing",
     sec_chat:"KASILog Chatbot",sec_chat_s:"Ask anything about R&D laws and regulations",chat_open:"Open chatbot",chat_google:"A Google account sign-in is required.",
     chat_howto:"How to use",chat_s1:"Ask about R&D-related laws, regulations, and internal rules.",chat_s2:"Verify answers against the original manuals and regulations.",
     chat_s3a:"Send anything that needs improvement to the ",chat_s3b:".",
@@ -613,17 +616,20 @@ function showToast(msg){
 function renderSchedule(){
   var en = window.uiLang === "en";
   var today = new Date(); today.setHours(0,0,0,0);
+  // end 가 있으면 기간 일정이다. 끝나는 날까지 목록에 남긴다 (추석연휴처럼 이틀 이상인 것)
   var items = SCHEDULE.map(function(s){
     var d = new Date(s.date+"T00:00:00");
-    return { s:s, d:d, diff: Math.round((d-today)/864e5) };
-  }).filter(function(x){ return x.diff >= 0; }).sort(function(a,b){ return a.d-b.d; });
+    var e = s.end ? new Date(s.end+"T00:00:00") : d;
+    return { s:s, d:d, e:e, diff: Math.round((d-today)/864e5), endDiff: Math.round((e-today)/864e5) };
+  }).filter(function(x){ return x.endDiff >= 0; }).sort(function(a,b){ return a.d-b.d; });
   $("#schedList").innerHTML = items.map(function(x){
     var cls = "", label = "D-"+x.diff;
-    if (x.diff === 0){ cls = "today"; label = "D-DAY"; }
+    if (x.diff < 0){ cls = "today"; label = L("sched_now"); }      // 기간 일정이 이미 시작됨
+    else if (x.diff === 0){ cls = "today"; label = "D-DAY"; }
     else if (x.diff <= 7){ cls = "soon"; }
     var org = en && x.s.orgEn ? x.s.orgEn : x.s.org;
     var title = en && x.s.titleEn ? x.s.titleEn : x.s.title;
-    return '<li class="sched-item"><span class="dday '+cls+'">'+label+'</span><div class="sched-body"><strong title="'+esc(title)+'"><span class="sched-org">'+esc(org)+'</span>'+esc(title)+'</strong><span class="meta">'+L("fmt_date")(x.d)+'</span></div></li>';
+    return '<li class="sched-item"><span class="dday '+cls+'">'+label+'</span><div class="sched-body"><strong title="'+esc(title)+'"><span class="sched-org">'+esc(org)+'</span>'+esc(title)+'</strong><span class="meta">'+L("fmt_date")(x.d)+(x.s.end ? " ~ "+L("fmt_date")(x.e) : "")+'</span></div></li>';
   }).join("");
   $("#schedEmpty").hidden = items.length > 0;
   // 일정이 없으면 카드를 축소해 빈 상자로 보이지 않게 한다
