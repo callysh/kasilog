@@ -174,14 +174,14 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:28px 0}
 
 /* ── 사이트 내 검색창 ── */
 .site-search{position:relative;max-width:540px;margin:26px auto 0;text-align:left;z-index:40}
-.ss-box{position:relative;display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.06);border:1px solid rgba(198,166,100,.28);border-radius:13px;padding:11px 14px}
+.ss-box{position:relative;display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.06);border:2px solid rgba(198,166,100,.38);border-radius:14px;padding:10px 13px}
 /* 금색 테두리가 천천히 한 바퀴 흐른다. 쨍한 금색이 아니라 샴페인색이다 (유승님 지정 2026-09-08).
    테두리만 칠하려고 mask 두 장을 겹쳐 안쪽을 파낸다. */
 .ss-box::before{
-  content:"";position:absolute;inset:-1px;border-radius:14px;padding:1px;pointer-events:none;
+  content:"";position:absolute;inset:-2px;border-radius:16px;padding:2px;pointer-events:none;
   background:linear-gradient(100deg,
-    rgba(198,166,100,0) 30%, rgba(206,178,116,.55) 43%, rgba(233,215,171,.9) 50%,
-    rgba(206,178,116,.55) 57%, rgba(198,166,100,0) 70%);
+    rgba(198,166,100,0) 28%, rgba(210,182,122,.7) 42%, rgba(240,224,182,1) 50%,
+    rgba(210,182,122,.7) 58%, rgba(198,166,100,0) 72%);
   background-size:260% 100%;background-repeat:no-repeat;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -189,7 +189,7 @@ footer{border-top:1px solid rgba(255,255,255,.07);padding:28px 0}
   animation:ssGold 7s linear infinite;
 }
 @keyframes ssGold{ from{background-position:210% 0} to{background-position:-60% 0} }
-.ss-box:focus-within{border-color:rgba(216,186,120,.55);background:rgba(255,255,255,.09)}
+.ss-box:focus-within{border-color:rgba(222,194,132,.7);background:rgba(255,255,255,.09)}
 .ss-box:focus-within::before{animation-duration:3.4s}
 /* 움직임을 줄이도록 설정한 사람에게는 흐르지 않고 금색 테두리만 남긴다 */
 @media (prefers-reduced-motion: reduce){
