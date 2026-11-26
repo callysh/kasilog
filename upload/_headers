@@ -1,0 +1,4 @@
+# 검색엔진 수집 차단 (PDF·엑셀 포함 전체 파일)
+# robots.txt 로 Disallow 하지 말 것: 구글이 페이지를 못 읽으면 noindex 도 못 봐서 검색결과가 안 사라진다.
+/*
+  X-Robots-Tag: noindex, nofollow
